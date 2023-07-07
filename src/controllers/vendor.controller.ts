@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
-import { CreateVendorDto } from '../dto'
+import { CreateFoodDto, CreateVendorDto } from '../dto'
 import { Vendor } from '../models'
 import { GeneratePassword, GenerateSalt } from '../utils'
+import { Food } from '../models/food.model'
 
 export const FetchVendor = async (id: string | undefined, email?: string) => {
   if (email) {
@@ -103,4 +104,31 @@ export const FetchVendorByEmail = async (
   }
 
   return res.json({ status: 'success', data: vendor })
+}
+
+export const AddFood = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const user = req.user
+
+  const { name, description, category, food_type, ready_time, price } = <
+    CreateFoodDto
+  >req.body
+
+  const created_food = await Food.create({
+    name,
+    description,
+    category,
+    food_type,
+    ready_time,
+    price,
+    vendor_id: user?._id
+  })
+
+  return res.json({
+    status: 'success',
+    data: created_food,
+  })
 }

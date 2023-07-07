@@ -11,4 +11,3 @@ router.get('/email', FetchVendorByEmail)
 router.use(Authenticate)
 router.post('/foods', AddFood)
 export { router as VendorRouter }
-

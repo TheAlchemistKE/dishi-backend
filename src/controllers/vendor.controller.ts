@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express'
-import { CreateFoodDto, CreateVendorDto } from '../dto'
+import { type Request, type Response, type NextFunction } from 'express'
+import { type CreateFoodDto, type CreateVendorDto } from '../dto'
 import { Vendor } from '../models'
 import { GeneratePassword, GenerateSalt } from '../utils'
 import { Food } from '../models/food.model'
 
 export const FetchVendor = async (id: string | undefined, email?: string) => {
   if (email) {
-    return await Vendor.findOne({ email: email })
+    return await Vendor.findOne({ email })
   } else {
     return await Vendor.findById(id)
   }
@@ -15,7 +15,7 @@ export const FetchVendor = async (id: string | undefined, email?: string) => {
 export const CreateVendor = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const {
     name,
@@ -25,15 +25,15 @@ export const CreateVendor = async (
     address,
     phone,
     email,
-    password,
-  } = <CreateVendorDto>req.body
+    password
+  } = req.body as CreateVendorDto
 
   const existing_vendor = await FetchVendor('', email)
 
   if (existing_vendor !== null) {
     return res.json({
       status: 'error',
-      message: `Vendor with email ${existing_vendor.email} already exists`,
+      message: `Vendor with email ${existing_vendor.email} already exists`
     })
   }
 
@@ -52,7 +52,7 @@ export const CreateVendor = async (
     service_available: false,
     cover_images: [],
     rating: 0,
-    password: hash,
+    password: hash
   })
 
   return res.json({ status: 'success', data: created_vendor })
@@ -61,7 +61,7 @@ export const CreateVendor = async (
 export const FetchAllVendors = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const vendors = await Vendor.find()
 
@@ -75,7 +75,7 @@ export const FetchAllVendors = async (
 export const FetchVendorById = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const vendor_id = req.params.id
 
@@ -86,14 +86,14 @@ export const FetchVendorById = async (
 
   return res.json({
     status: 'success',
-    data: vendor,
+    data: vendor
   })
 }
 
 export const FetchVendorByEmail = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const { email } = req.body
 
@@ -109,13 +109,11 @@ export const FetchVendorByEmail = async (
 export const AddFood = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const user = req.user
 
-  const { name, description, category, food_type, ready_time, price } = <
-    CreateFoodDto
-  >req.body
+  const { name, description, category, food_type, ready_time, price } = req.body as CreateFoodDto
 
   const created_food = await Food.create({
     name,
@@ -129,6 +127,6 @@ export const AddFood = async (
 
   return res.json({
     status: 'success',
-    data: created_food,
+    data: created_food
   })
 }

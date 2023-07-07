@@ -5,7 +5,7 @@ import {
   AdminRouter,
   AuthRouter,
   CustomerRouter,
-  VendorRouter,
+  VendorRouter
 } from './src/routes'
 import { MONGO_URI } from './src/config'
 

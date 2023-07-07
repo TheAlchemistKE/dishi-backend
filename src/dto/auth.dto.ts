@@ -1,3 +1,3 @@
-import { VendorPayload } from './vendor.dto'
+import { type VendorPayload } from './vendor.dto'
 
 export type AuthPayload = VendorPayload

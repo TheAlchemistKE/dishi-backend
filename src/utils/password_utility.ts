@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt'
-import { Request } from 'express'
+import { type Request } from 'express'
 import jwt from 'jsonwebtoken'
-import { VendorPayload } from '../dto'
+import { type VendorPayload } from '../dto'
 import { JWT_SECRET } from '../config'
-import { AuthPayload } from '../dto/auth.dto'
+import { type AuthPayload } from '../dto/auth.dto'
 
 export const GenerateSalt = async () => {
   return await bcrypt.genSalt()
@@ -16,7 +16,7 @@ export const GeneratePassword = async (password: string, salt: string) => {
 export const ValidatePassword = async (
   entered_password: string,
   saved_password: string | any,
-  salt: string | any,
+  salt: string | any
 ) => {
   return (await GeneratePassword(entered_password, salt)) === saved_password
 }
@@ -26,11 +26,11 @@ export const GenerateSignature = async (payload: VendorPayload) => {
 }
 
 export const ValidateSignature = async (req: Request) => {
-  const signature = <string>req.get('Authorization')
+  const signature = req.get('Authorization') as string
   if (signature) {
     const payload = (await jwt.verify(
       signature.split(' ')[1],
-      JWT_SECRET,
+      JWT_SECRET
     )) as AuthPayload
     req.user = payload
 

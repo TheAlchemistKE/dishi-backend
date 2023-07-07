@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express'
-import { AuthPayload } from '../dto'
+import { type Request, type Response, type NextFunction } from 'express'
+import { type AuthPayload } from '../dto'
 import { ValidateSignature } from '../utils'
 
 declare global {
@@ -13,11 +13,11 @@ declare global {
 export const Authenticate = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const signature = await ValidateSignature(req)
   if (signature) {
-    return next()
+    next()
   } else {
     return res.json({ message: 'User Not authorised' })
   }

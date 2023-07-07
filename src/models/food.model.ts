@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from 'mongoose'
+import mongoose, { Schema, type Document, Model } from 'mongoose'
 
 interface FoodDocument extends Document {
   name: string
@@ -22,16 +22,16 @@ const FoodSchema = new Schema(
     price: { type: Number, required: true },
     rating: { type: Number },
     vendor_id: { type: String },
-    images: { type: [String] },
+    images: { type: [String] }
   },
   {
     toJSON: {
-      transform(doc, ret) {
+      transform (doc, ret) {
         delete ret.createdAt, delete ret.updatedAt
-      },
+      }
     },
-    timestamps: true,
-  },
+    timestamps: true
+  }
 )
 
 const Food = mongoose.model('food', FoodSchema)

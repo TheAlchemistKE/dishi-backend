@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import {
   AdminRouter,
   AuthRouter,
-  CustomerRouter,
+  CustomerRouter, DeliveryRouter,
   VendorRouter
 } from './src/routes'
 import { MONGO_URI } from './src/config'
@@ -18,6 +18,7 @@ app.use('/auth', AuthRouter)
 app.use('/admin', AdminRouter)
 app.use('/customers', CustomerRouter)
 app.use('/vendors', VendorRouter)
+app.use('/deliveries', DeliveryRouter)
 
 mongoose
   .connect(MONGO_URI)

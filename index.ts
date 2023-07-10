@@ -4,8 +4,9 @@ import mongoose from 'mongoose'
 import {
   AdminRouter,
   AuthRouter,
-  CustomerRouter, DeliveryRouter,
-  VendorRouter
+  CustomerRouter,
+  DeliveryRouter,
+  VendorRouter,
 } from './src/routes'
 import { MONGO_URI } from './src/config'
 
@@ -24,6 +25,7 @@ mongoose
   .connect(MONGO_URI)
   .then(result => {
     console.log('database connected')
+    console.log(result.models)
   })
   .catch(err => {
     console.error(err)

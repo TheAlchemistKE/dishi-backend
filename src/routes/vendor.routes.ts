@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express'
+import express from 'express'
 import { AddFood, CreateVendor, FetchAllVendors, FetchVendorByEmail, FetchVendorById } from '../controllers'
 import { Authenticate } from '../middlewares'
 

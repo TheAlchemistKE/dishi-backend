@@ -52,7 +52,8 @@ export const CreateVendor = async (
     service_available: false,
     cover_images: [],
     rating: 0,
-    password: hash
+    password: hash,
+    foods: []
   })
 
   return res.json({ status: 'success', data: created_vendor })
@@ -113,7 +114,8 @@ export const AddFood = async (
 ) => {
   const user = req.user
 
-  const { name, description, category, food_type, ready_time, price } = req.body as CreateFoodDto
+  const { name, description, category, food_type, ready_time, price } =
+    req.body as CreateFoodDto
 
   const created_food = await Food.create({
     name,

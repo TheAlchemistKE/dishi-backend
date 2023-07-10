@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint --ext .js,.ts .",
     "lint:fix": "npx eslint --ext .js,.ts . --fix",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+    "prod": "NODE_ENV=production pm2 start index.ts --watch"
   },
   "author": "Kelyn Njeri",
   "license": "MIT",
@@ -21,6 +22,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
+    "pm2": "^5.3.0",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6"
   },
@@ -31,6 +33,7 @@
     "@types/mongoose": "^5.11.97",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
+    "class-validator": "^0.14.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.1",

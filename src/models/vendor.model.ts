@@ -1,4 +1,4 @@
-import mongoose, { Schema, type Document, Model } from 'mongoose'
+import mongoose, { Schema, type Document } from 'mongoose'
 
 interface VendorDocument extends Document {
   name: string
@@ -30,18 +30,22 @@ const VendorSchema = new Schema(
     service_available: { type: Boolean },
     cover_images: { type: [String] },
     rating: { type: Number },
-    foods: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: 'food'
-    }
+    foods: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'food'
+      }
+    ],
+    lat: { type: Number },
+    lng: { type: Number }
   },
   {
     toJSON: {
       transform (doc, ret) {
-        delete ret.password,
-        delete ret.salt,
-        delete ret.__v,
-        delete ret.createdAt,
+        delete ret.password
+        delete ret.salt
+        delete ret.__v
+        delete ret.createdAt
         delete ret.updatedAt
       }
     },
@@ -49,6 +53,6 @@ const VendorSchema = new Schema(
   }
 )
 
-const Vendor = mongoose.model('vendor', VendorSchema)
+const Vendor = mongoose.model<VendorDocument>('vendor', VendorSchema)
 
 export { Vendor }

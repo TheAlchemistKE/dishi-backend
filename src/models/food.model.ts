@@ -1,6 +1,8 @@
-import mongoose, { Schema, type Document, Model } from 'mongoose'
+import mongoose, { Schema, type Document } from 'mongoose'
 
-interface FoodDocument extends Document {
+export interface FoodDocument extends Document {
+
+  vendor_id: string
   name: string
   description: string
   category: string
@@ -8,32 +10,31 @@ interface FoodDocument extends Document {
   ready_time: number
   price: number
   rating: number
-  vendor_id: string
   images: [string]
 }
 
-const FoodSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    category: { type: String, required: true },
-    food_type: { type: String, required: true },
-    ready_time: { type: Number, required: true },
-    price: { type: Number, required: true },
-    rating: { type: Number },
-    vendor_id: { type: String },
-    images: { type: [String] }
-  },
-  {
-    toJSON: {
-      transform (doc, ret) {
-        delete ret.createdAt, delete ret.updatedAt
-      }
-    },
-    timestamps: true
-  }
-)
+const FoodSchema = new Schema({
 
-const Food = mongoose.model('food', FoodSchema)
+  vendor_id: { type: String, required: true },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  category: { type: String },
+  food_type: { type: String, required: true },
+  ready_time: { type: Number },
+  price: { type: Number },
+  rating: { type: Number },
+  images: { type: [String] }
+}, {
+  toJSON: {
+    transform (doc, ret) {
+      delete ret.__v
+      delete ret.createdAt
+      delete ret.updatedAt
+    }
+  },
+  timestamps: true
+})
+
+const Food = mongoose.model<FoodDocument>('food', FoodSchema)
 
 export { Food }

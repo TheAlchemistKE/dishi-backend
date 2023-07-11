@@ -4,8 +4,11 @@ import { Vendor } from '../models'
 import { GeneratePassword, GenerateSalt } from '../utils'
 import { Food } from '../models/food.model'
 
-export const FetchVendor = async (id: string | undefined, email?: string) => {
-  if (email) {
+export const FetchVendor = async (
+  id?: string,
+  email?: string,
+): Promise<any> => {
+  if (email !== '') {
     return await Vendor.findOne({ email })
   } else {
     return await Vendor.findById(id)
@@ -15,7 +18,7 @@ export const FetchVendor = async (id: string | undefined, email?: string) => {
 export const CreateVendor = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const {
     name,
@@ -25,7 +28,7 @@ export const CreateVendor = async (
     address,
     phone,
     email,
-    password
+    password,
   } = req.body as CreateVendorDto
 
   const existing_vendor = await FetchVendor('', email)
@@ -33,7 +36,7 @@ export const CreateVendor = async (
   if (existing_vendor !== null) {
     return res.json({
       status: 'error',
-      message: `Vendor with email ${existing_vendor.email} already exists`
+      message: `Vendor with email ${existing_vendor.email} already exists`,
     })
   }
 
@@ -53,7 +56,7 @@ export const CreateVendor = async (
     cover_images: [],
     rating: 0,
     password: hash,
-    foods: []
+    foods: [],
   })
 
   return res.json({ status: 'success', data: created_vendor })
@@ -62,9 +65,9 @@ export const CreateVendor = async (
 export const FetchAllVendors = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  const vendors = await Vendor.find()
+  const vendors = await Vendor.find().populate('foods')
 
   if (vendors !== null) {
     return res.json({ status: 'success', data: vendors })
@@ -76,7 +79,7 @@ export const FetchAllVendors = async (
 export const FetchVendorById = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const vendor_id = req.params.id
 
@@ -87,14 +90,14 @@ export const FetchVendorById = async (
 
   return res.json({
     status: 'success',
-    data: vendor
+    data: vendor,
   })
 }
 
 export const FetchVendorByEmail = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { email } = req.body
 
@@ -110,12 +113,14 @@ export const FetchVendorByEmail = async (
 export const AddFood = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const user = req.user
 
   const { name, description, category, food_type, ready_time, price } =
     req.body as CreateFoodDto
+
+  const vendor = await FetchVendor(user?._id, '')
 
   const created_food = await Food.create({
     name,
@@ -124,8 +129,11 @@ export const AddFood = async (
     food_type,
     ready_time,
     price,
-    vendor_id: user?._id
+    vendor_id: vendor
   })
+
+  vendor.foods.push(created_food)
+  vendor.save()
 
   return res.json({
     status: 'success',

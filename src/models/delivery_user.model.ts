@@ -46,6 +46,6 @@ const DeliveryUserSchema = new Schema({
   timestamps: true
 })
 
-const DeliveryUser = mongoose.model<DeliveryUserDocument>('deliveryUser', DeliveryUserSchema)
+const DeliveryUser = mongoose.model<DeliveryUserDocument>('delivery_users', DeliveryUserSchema)
 
 export { DeliveryUser }

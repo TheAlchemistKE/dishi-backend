@@ -47,6 +47,6 @@ const OfferSchema = new Schema({
   timestamps: true
 })
 
-const Offer = mongoose.model<OfferDocument>('offer', OfferSchema)
+const Offer = mongoose.model<OfferDocument>('offers', OfferSchema)
 
 export { Offer }

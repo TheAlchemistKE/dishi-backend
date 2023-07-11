@@ -33,7 +33,7 @@ const VendorSchema = new Schema(
     foods: [
       {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'food'
+        ref: 'foods'
       }
     ],
     lat: { type: Number },
@@ -41,7 +41,7 @@ const VendorSchema = new Schema(
   },
   {
     toJSON: {
-      transform (doc, ret) {
+      transform(doc, ret) {
         delete ret.password
         delete ret.salt
         delete ret.__v
@@ -53,6 +53,6 @@ const VendorSchema = new Schema(
   }
 )
 
-const Vendor = mongoose.model<VendorDocument>('vendor', VendorSchema)
+const Vendor = mongoose.model<VendorDocument>('vendors', VendorSchema)
 
 export { Vendor }

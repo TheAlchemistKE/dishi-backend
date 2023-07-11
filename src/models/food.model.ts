@@ -15,7 +15,7 @@ export interface FoodDocument extends Document {
 
 const FoodSchema = new Schema({
 
-  vendor_id: { type: String, required: true },
+  vendor_id: { type: mongoose.SchemaTypes.ObjectId, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
   category: { type: String },
@@ -35,6 +35,6 @@ const FoodSchema = new Schema({
   timestamps: true
 })
 
-const Food = mongoose.model<FoodDocument>('food', FoodSchema)
+const Food = mongoose.model<FoodDocument>('foods', FoodSchema)
 
 export { Food }

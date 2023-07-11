@@ -55,6 +55,6 @@ const CustomerSchema = new Schema({
   timestamps: true
 })
 
-const Customer = mongoose.model<CustomerDocument>('customer', CustomerSchema)
+const Customer = mongoose.model<CustomerDocument>('customers', CustomerSchema)
 
 export { Customer }

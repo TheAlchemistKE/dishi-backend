@@ -6,6 +6,7 @@ import {
   AuthRouter,
   CustomerRouter,
   DeliveryRouter,
+  ShoppingRoute,
   VendorRouter,
 } from './src/routes'
 import { MONGO_URI } from './src/config'
@@ -20,6 +21,7 @@ app.use('/admin', AdminRouter)
 app.use('/customers', CustomerRouter)
 app.use('/vendors', VendorRouter)
 app.use('/deliveries', DeliveryRouter)
+app.use('/shopping', ShoppingRoute)
 
 mongoose
   .connect(MONGO_URI)

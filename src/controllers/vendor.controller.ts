@@ -3,15 +3,16 @@ import { type CreateFoodDto, type CreateVendorDto } from '../dto'
 import { Vendor } from '../models'
 import { GeneratePassword, GenerateSalt } from '../utils'
 import { Food } from '../models/food.model'
+import { Pagination } from '../interfaces'
 
 export const FetchVendor = async (
   id?: string,
   email?: string,
 ): Promise<any> => {
   if (email !== '') {
-    return await Vendor.findOne({ email })
+    return await Vendor.findOne({ email }).populate('foods')
   } else {
-    return await Vendor.findById(id)
+    return await Vendor.findById(id).populate('foods')
   }
 }
 
@@ -19,7 +20,7 @@ export const CreateVendor = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<any> => {
   const {
     name,
     owner_name,
@@ -59,18 +60,19 @@ export const CreateVendor = async (
     foods: [],
   })
 
-  return res.json({ status: 'success', data: created_vendor })
+  return res.json({ status: 'success', vendor: created_vendor })
 }
 
 export const FetchAllVendors = async (
   req: Request,
   res: Response,
-  next: NextFunction,
-) => {
+  next: NextFunction
+): Promise<any> => {
+  
   const vendors = await Vendor.find().populate('foods')
 
   if (vendors !== null) {
-    return res.json({ status: 'success', data: vendors })
+    return res.json({ status: 'success', vendors })
   }
 
   return res.json({ status: 'info', data: 'Vendors not found' })
@@ -80,7 +82,7 @@ export const FetchVendorById = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<any> => {
   const vendor_id = req.params.id
 
   const vendor = await FetchVendor(vendor_id, '')
@@ -90,7 +92,7 @@ export const FetchVendorById = async (
 
   return res.json({
     status: 'success',
-    data: vendor,
+    vendor,
   })
 }
 
@@ -98,7 +100,7 @@ export const FetchVendorByEmail = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<any> => {
   const { email } = req.body
 
   const vendor = await FetchVendor('', String(email))
@@ -114,7 +116,7 @@ export const AddFood = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<any> => {
   const user = req.user
 
   const { name, description, category, food_type, ready_time, price } =
@@ -129,7 +131,7 @@ export const AddFood = async (
     food_type,
     ready_time,
     price,
-    vendor_id: vendor
+    vendor_id: vendor,
   })
 
   vendor.foods.push(created_food)
@@ -137,6 +139,14 @@ export const AddFood = async (
 
   return res.json({
     status: 'success',
-    data: created_food
+    food: created_food,
   })
+}
+
+export const CreateOffer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<any> => {
+  // const {} = req.body as
 }

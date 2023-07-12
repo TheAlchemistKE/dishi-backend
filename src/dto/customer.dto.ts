@@ -13,5 +13,5 @@ export const createCustomer = object({
   last_name: string().required('last_name is required'),
   email: string().email().required('email is required'),
   password: string().required('password is required'),
-  phone: string().required('phone is required'),
+  phone: string().required('phone is required')
 })

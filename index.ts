@@ -2,12 +2,12 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import {
-  AdminRouter,
-  AuthRouter,
-  CustomerRouter,
-  DeliveryRouter,
-  ShoppingRoute,
-  VendorRouter,
+	AdminRouter,
+	AuthRouter,
+	CustomerRouter,
+	DeliveryRouter,
+	ShoppingRoute,
+	VendorRouter
 } from './src/routes'
 import { MONGO_URI } from './src/config'
 
@@ -24,15 +24,15 @@ app.use('/deliveries', DeliveryRouter)
 app.use('/shopping', ShoppingRoute)
 
 mongoose
-  .connect(MONGO_URI)
-  .then(result => {
-    console.log('database connected')
-    console.log(result.models)
-  })
-  .catch(err => {
-    console.error(err)
-  })
+	.connect(MONGO_URI)
+	.then(result => {
+		console.log('database connected')
+		console.log(result.models)
+	})
+	.catch(err => {
+		console.error(err)
+	})
 
-app.listen(8000, () => {
-  console.log('listening on port 8000')
+app.listen(process.env.PORT || 8000, () => {
+	console.log(`listening on port ${process.env.PORT}`)
 })

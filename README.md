@@ -64,48 +64,68 @@ The Dishi backend system follows a modular and organized structure to promote ma
 ├── LICENSE
 ├── Makefile
 ├── README.md
+├── babel.config.js
 ├── deploy.sh
 ├── docker-compose.yml
+├── git-commit.md
 ├── index.ts
+├── jest.config.js
 ├── lint.sh
 ├── package-lock.json
 ├── package.json
 ├── src
+│   ├── api
+│   │   ├── controllers
+│   │   │   ├── admin.controller 2.ts
+│   │   │   ├── admin.controller.ts
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── customer.controller.ts
+│   │   │   ├── index.ts
+│   │   │   ├── shopping.controller.ts
+│   │   │   └── vendor.controller.ts
+│   │   ├── dto
+│   │   │   ├── admin.dto.ts
+│   │   │   ├── auth.dto.ts
+│   │   │   ├── customer.dto.ts
+│   │   │   ├── food.dto.ts
+│   │   │   ├── index.ts
+│   │   │   ├── offer.dto.ts
+│   │   │   └── vendor.dto.ts
+│   │   └── middlewares
+│   │       ├── common_auth.ts
+│   │       └── index.ts
 │   ├── config
 │   │   └── index.ts
-│   ├── controllers
-│   │   ├── admin.controller.ts
-│   │   ├── auth.controller.ts
-│   │   ├── customer.controller.ts
-│   │   ├── index.ts
-│   │   ├── shopping.controller.ts
-│   │   └── vendor.controller.ts
-│   ├── decorators
-│   │   └── match.decorator.ts
-│   ├── dto
-│   │   ├── admin.dto.ts
-│   │   ├── auth.dto.ts
-│   │   ├── customer.dto.ts
-│   │   ├── food.dto.ts
-│   │   ├── index.ts
-│   │   ├── offer.dto.ts
-│   │   └── vendor.dto.ts
-│   ├── images
+│   ├── database
+│   │   ├── base
+│   │   │   ├── base.repository.ts
+│   │   │   └── index.ts
+│   │   ├── interfaces
+│   │   │   ├── index.ts
+│   │   │   ├── reader.interface.ts
+│   │   │   └── writer.interface.ts
+│   │   ├── models
+│   │   │   ├── customer.model.ts
+│   │   │   ├── delivery.model.ts
+│   │   │   ├── delivery_user.model.ts
+│   │   │   ├── food.model.ts
+│   │   │   ├── index.ts
+│   │   │   ├── offer.model.ts
+│   │   │   ├── order.model.ts
+│   │   │   └── vendor.model.ts
+│   │   └── repositories
+│   │       ├── customer.repository.ts
+│   │       ├── delivery.repository.ts
+│   │       ├── delivery_user.repository.ts
+│   │       ├── food.repository.ts
+│   │       ├── index.ts
+│   │       ├── offer.repository.ts
+│   │       ├── order.repository.ts
+│   │       └── vendor.repository.ts
 │   ├── interfaces
 │   │   ├── index.ts
 │   │   ├── request.interface.ts
 │   │   └── response.interface.ts
-│   ├── middlewares
-│   │   ├── common_auth.ts
-│   │   └── index.ts
-│   ├── models
-│   │   ├── customer.model.ts
-│   │   ├── delivery_user.model.ts
-│   │   ├── food.model.ts
-│   │   ├── index.ts
-│   │   ├── offer.model.ts
-│   │   ├── order.model.ts
-│   │   └── vendor.model.ts
 │   ├── routes
 │   │   ├── admin.routes.ts
 │   │   ├── auth.routes.ts
@@ -115,11 +135,21 @@ The Dishi backend system follows a modular and organized structure to promote ma
 │   │   ├── shopping.routes.ts
 │   │   └── vendor.routes.ts
 │   ├── services
+│   │   ├── customer.service.ts
+│   │   └── vendor.service.ts
 │   └── utils
 │       ├── index.ts
 │       └── password_utility.ts
+├── test
+│   ├── performance
+│   │   └── load-test.yml
+│   └── unittest
+│       ├── customer.test.ts
+│       ├── food.test.ts
+│       └── vendor.test.ts
 └── tsconfig.json
 ```
+
 ## Development
 
 To contribute or modify the Dishi backend system, consider the following guidelines:

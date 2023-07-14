@@ -1,6 +1,10 @@
 import express from 'express'
-import { UpdateVendorProfile, VendorLogin, VendorProfile } from '../controllers'
-import { Authenticate } from '../middlewares'
+import {
+	UpdateVendorProfile,
+	VendorLogin,
+	VendorProfile
+} from '../api/controllers'
+import { Authenticate } from '../api/middlewares'
 
 const router = express.Router()
 

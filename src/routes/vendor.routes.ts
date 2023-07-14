@@ -1,6 +1,12 @@
 import express from 'express'
-import { AddFood, CreateVendor, FetchAllVendors, FetchVendorByEmail, FetchVendorById } from '../controllers'
-import { Authenticate } from '../middlewares'
+import {
+	AddFood,
+	CreateVendor,
+	FetchAllVendors,
+	FetchVendorByEmail,
+	FetchVendorById
+} from '../api/controllers'
+import { Authenticate } from '../api/middlewares'
 
 const router = express.Router()
 

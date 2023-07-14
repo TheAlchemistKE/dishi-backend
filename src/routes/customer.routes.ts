@@ -1,6 +1,6 @@
 import express from 'express'
-import { CreateCustomer, FetchAllCustomers } from '../controllers'
-import { Authenticate } from '../middlewares'
+import { CreateCustomer, FetchAllCustomers } from '../api/controllers'
+import { Authenticate } from '../api/middlewares'
 
 const router = express.Router()
 

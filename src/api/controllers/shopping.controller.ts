@@ -2,8 +2,7 @@ import { type Request, type Response, type NextFunction } from 'express'
 import {
 	type FoodDocument,
 	Vendor,
-	Offer,
-	VendorDocument
+	Offer
 } from '../../database/models'
 
 export const GetFoodAvailability = async (

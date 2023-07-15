@@ -1,7 +1,6 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import {
 	type AuthPayload,
-	type UpdateVendorProfileDto,
 	type VendorLoginDto
 } from '../dto'
 import { FetchVendor } from './vendor.controller'

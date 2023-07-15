@@ -387,7 +387,7 @@ export const CreateOffer = async (
 					min_value,
 					vendor: [vendor]
 				})
-				return res.status(201)
+				return res.status(201).json(offer)
 			}
 		}
 		return res.status(400).json({

@@ -1,11 +1,11 @@
 import express from 'express'
 import {
-  GetAvailableOffers,
-  GetFoodAvailability,
-  GetFoodsIn30Min,
-  GetTopRestaurants,
-  RestaurantById,
-  SearchFoods
+	GetAvailableOffers,
+	GetFoodAvailability,
+	GetFoodsIn30Min,
+	GetTopRestaurants,
+	RestaurantById,
+	SearchFoods
 } from '../api/controllers'
 
 const router = express.Router()

@@ -1,9 +1,9 @@
 export interface ResponseInterface {
-  status: string
-  data: any
+	status: string
+	data: any
 }
 
 export interface ErrorResponse {
-  status: string
-  message: string
+	status: string
+	message: string
 }

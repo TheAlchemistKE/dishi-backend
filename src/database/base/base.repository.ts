@@ -13,11 +13,11 @@ export class BaseRepository<T> implements IWriter<T>, IReader<T> {
 	}
 
 	async create(item: T): Promise<T> {
-		return await this._model.create(item)
+		return this._model.create(item)
 	}
 
 	async update(id: Types.ObjectId, item: Partial<T>): Promise<T | null> {
-		return await this._model.findByIdAndUpdate(id, item, { new: true }).exec()
+		return this._model.findByIdAndUpdate(id, item, { new: true }).exec()
 	}
 
 	async delete(id: Types.ObjectId): Promise<boolean> {
@@ -26,13 +26,13 @@ export class BaseRepository<T> implements IWriter<T>, IReader<T> {
 	}
 
 	async find(options?: PaginationOptions): Promise<T[]> {
-		const { page = 1, limit = 10 } = options !== null || {}
-		const skip = (page - 1) * limit
+		const { page = 1, limit = 10 } = options as PaginationOptions
+		const skip: number = (page - 1) * limit
 
-		return await this._model.find().skip(skip).limit(limit).exec()
+		return this._model.find().skip(skip).limit(limit).exec()
 	}
 
 	async findOne(id: Types.ObjectId): Promise<T | null> {
-		return await this._model.findById(id)
+		return this._model.findById(id)
 	}
 }

@@ -1,3 +1,10 @@
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=TheAlchemistKE_dishi-backend&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=TheAlchemistKE_dishi-backend)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=TheAlchemistKE_dishi-backend&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=TheAlchemistKE_dishi-backend)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TheAlchemistKE_dishi-backend&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=TheAlchemistKE_dishi-backend)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=TheAlchemistKE_dishi-backend&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=TheAlchemistKE_dishi-backend)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TheAlchemistKE_dishi-backend&metric=bugs)](https://sonarcloud.io/summary/new_code?id=TheAlchemistKE_dishi-backend)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TheAlchemistKE_dishi-backend&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=TheAlchemistKE_dishi-backend)
+
 # Dishi Food Ordering App Backend System.
 Dishi is a Food Ordering Backend System written in Node.js and TypeScript. It utilizes MongoDB as the database with the help of the Mongoose ODM (Object Data Modeling), and implements caching using Redis. This README.md file provides a comprehensive guide to understanding and working with the Dishi backend system.
 

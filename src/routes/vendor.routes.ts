@@ -21,7 +21,7 @@ import { Authenticate } from '../api/middlewares'
 
 const router = express.Router()
 
-const MAX_SIZE = 1048576
+const MAX_SIZE = 7000
 const image_storage = multer.diskStorage({
 	destination: (req: Request, res: Express.Multer.File, cb) => {
 		cb(null, 'images')

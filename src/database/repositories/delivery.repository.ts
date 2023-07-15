@@ -1,8 +1,8 @@
 import { BaseRepository } from '../base'
-import { Delivery, DeliveryDocument } from '../models'
+import { Delivery, type DeliveryDocument } from '../models'
 
 export class DeliveryRepository extends BaseRepository<DeliveryDocument> {
-	constructor() {
-		super(Delivery)
-	}
+  constructor () {
+    super(Delivery)
+  }
 }

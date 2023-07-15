@@ -1,8 +1,8 @@
 import express from 'express'
 import {
-	UpdateVendorProfile,
-	VendorLogin,
-	VendorProfile
+  UpdateVendorProfile,
+  VendorLogin,
+  VendorProfile
 } from '../api/controllers'
 import { Authenticate } from '../api/middlewares'
 

@@ -1,4 +1,4 @@
 export class VendorService {
-    // private readonly repo: 
-    
+  // private readonly repo:
+
 }

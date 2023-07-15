@@ -1,10 +1,10 @@
 import express from 'express'
 import {
-	AddFood,
-	CreateVendor,
-	FetchAllVendors,
-	FetchVendorByEmail,
-	FetchVendorById
+  AddFood,
+  CreateVendor,
+  FetchAllVendors,
+  FetchVendorByEmail,
+  FetchVendorById
 } from '../api/controllers'
 import { Authenticate } from '../api/middlewares'
 

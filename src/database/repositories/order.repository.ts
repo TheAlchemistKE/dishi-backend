@@ -1,8 +1,8 @@
 import { BaseRepository } from '../base'
-import { Order, OrderDocument } from '../models'
+import { Order, type OrderDocument } from '../models'
 
 export class OrderRepository extends BaseRepository<OrderDocument> {
-	constructor() {
-		super(Order)
-	}
+  constructor () {
+    super(Order)
+  }
 }

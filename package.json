@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon index.ts",
+    "build": "tsc && babel src --out-dir dist --extensions \".ts\" --copy-files",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "prod": "npm run build && npm run start",
     "test": "jest",
     "lint": "npx eslint --ext .js,.ts .",
     "lint:fix": "npx eslint --ext .js,.ts . --fix",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-    "prod": "NODE_ENV=production pm2 start index.ts --watch"
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "author": "Kelyn Njeri",
   "license": "MIT",
@@ -20,6 +22,7 @@
     "@types/bcrypt": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
+    "babel-cli": "^6.26.0",
     "babel-jest": "^29.6.1",
     "eslint": "^8.44.0",
     "eslint-config-standard-with-typescript": "^36.0.0",

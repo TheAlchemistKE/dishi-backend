@@ -5,9 +5,16 @@ import {
 	type CreateVendorDto,
 	LocationDto,
 	ProcessOrderDto,
-	AuthPayload
+	AuthPayload,
+	CreateOfferInputs
 } from '../dto'
-import { Order, Vendor, VendorDocument, Food } from '../../database/models'
+import {
+	Order,
+	Vendor,
+	VendorDocument,
+	Food,
+	Offer, OfferDocument
+} from '../../database/models'
 import { GeneratePassword, GenerateSalt } from '../../utils'
 
 export const FetchVendor = async (
@@ -26,46 +33,50 @@ export const CreateVendor = async (
 	res: Response,
 	next: NextFunction
 ): Promise<any> => {
-	const {
-		name,
-		owner_name,
-		food_type,
-		pincode,
-		address,
-		phone,
-		email,
-		password
-	} = req.body as CreateVendorDto
+	try {
+		const {
+			name,
+			owner_name,
+			food_type,
+			pincode,
+			address,
+			phone,
+			email,
+			password
+		} = req.body as CreateVendorDto
 
-	const existing_vendor = await FetchVendor('', email)
+		const existing_vendor = await FetchVendor('', email)
 
-	if (existing_vendor !== null) {
-		return res.json({
-			status: 'error',
-			message: `Vendor already exists`
+		if (existing_vendor !== null) {
+			return res.json({
+				status: 'error',
+				message: `Vendor already exists`
+			})
+		}
+
+		const salt = await GenerateSalt()
+		const hash = await GeneratePassword(password, salt)
+
+		const created_vendor = await Vendor.create({
+			name,
+			owner_name,
+			food_type,
+			pincode,
+			address,
+			phone,
+			email,
+			salt,
+			service_available: false,
+			cover_images: [],
+			rating: 0,
+			password: hash,
+			foods: []
 		})
+
+		return res.json({ status: 'success', vendor: created_vendor })
+	} catch (e) {
+		next(e)
 	}
-
-	const salt = await GenerateSalt()
-	const hash = await GeneratePassword(password, salt)
-
-	const created_vendor = await Vendor.create({
-		name,
-		owner_name,
-		food_type,
-		pincode,
-		address,
-		phone,
-		email,
-		salt,
-		service_available: false,
-		cover_images: [],
-		rating: 0,
-		password: hash,
-		foods: []
-	})
-
-	return res.json({ status: 'success', vendor: created_vendor })
 }
 
 export const FetchAllVendors = async (
@@ -73,13 +84,17 @@ export const FetchAllVendors = async (
 	res: Response,
 	next: NextFunction
 ): Promise<any> => {
-	const vendors = await Vendor.find().populate('foods')
+	try {
+		const vendors = await Vendor.find().populate('foods')
 
-	if (vendors !== null) {
-		return res.json({ status: 'success', vendors })
+		if (vendors !== null) {
+			return res.json({ status: 'success', vendors })
+		}
+
+		return res.json({ status: 'info', data: 'Vendors not found' })
+	} catch (e) {
+		next(e)
 	}
-
-	return res.json({ status: 'info', data: 'Vendors not found' })
 }
 
 export const FetchVendorById = async (
@@ -87,17 +102,21 @@ export const FetchVendorById = async (
 	res: Response,
 	next: NextFunction
 ): Promise<any> => {
-	const vendor_id = req.params.id
+	try {
+		const vendor_id = req.params.id
 
-	const vendor = await FetchVendor(vendor_id, '')
-	if (vendor === null) {
-		res.json({ status: 'error', message: 'vendor does not exist' })
+		const vendor = await FetchVendor(vendor_id, '')
+		if (vendor === null) {
+			res.json({ status: 'error', message: 'vendor does not exist' })
+		}
+
+		return res.json({
+			status: 'success',
+			vendor
+		})
+	} catch (e) {
+		next(e)
 	}
-
-	return res.json({
-		status: 'success',
-		vendor
-	})
 }
 
 export const FetchVendorByEmail = async (
@@ -105,15 +124,22 @@ export const FetchVendorByEmail = async (
 	res: Response,
 	next: NextFunction
 ): Promise<any> => {
-	const { email } = req.body
+	try {
+		const { email } = req.body
 
-	const vendor = await FetchVendor('', String(email))
+		const vendor = await FetchVendor('', String(email))
 
-	if (vendor === null) {
-		return res.json({ status: 'error', message: 'vendor does not exist' })
+		if (vendor === null) {
+			return res.json({
+				status: 'error',
+				message: 'vendor does not exist'
+			})
+		}
+
+		return res.json({ status: 'success', data: vendor })
+	} catch (e) {
+		next(e)
 	}
-
-	return res.json({ status: 'success', data: vendor })
 }
 
 export const AddFood = async (
@@ -121,38 +147,34 @@ export const AddFood = async (
 	res: Response,
 	next: NextFunction
 ): Promise<any> => {
-	const user = req.user
+	try {
+		const user = req.user
 
-	const { name, description, category, food_type, ready_time, price } =
-		req.body as CreateFoodDto
+		const { name, description, category, food_type, ready_time, price } =
+			req.body as CreateFoodDto
 
-	const vendor = await FetchVendor(user?._id, '')
+		const vendor = await FetchVendor(user?._id, '')
 
-	const created_food = await Food.create({
-		name,
-		description,
-		category,
-		food_type,
-		ready_time,
-		price,
-		vendor_id: vendor
-	})
+		const created_food = await Food.create({
+			name,
+			description,
+			category,
+			food_type,
+			ready_time,
+			price,
+			vendor_id: vendor
+		})
 
-	vendor.foods.push(created_food)
-	vendor.save()
+		vendor.foods.push(created_food)
+		vendor.save()
 
-	return res.json({
-		status: 'success',
-		food: created_food
-	})
-}
-
-export const CreateOffer = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): Promise<any> => {
-	// const {} = req.body as
+		return res.json({
+			status: 'success',
+			food: created_food
+		})
+	} catch (e) {
+		next(e)
+	}
 }
 
 export const UpdateVendorProfile = async (
@@ -319,4 +341,151 @@ export const ProcessOrder = async (
 		}
 	}
 	return res.status(400).json({ message: 'Error Processing Order' })
+}
+
+export const CreateOffer = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const user = req.user as AuthPayload
+
+		if (user !== null) {
+			const {
+				title,
+				description,
+				offer_type,
+				offer_amount,
+				pincode,
+				promocode,
+				promo_type,
+				start_validity,
+				end_validity,
+				bank,
+				bins,
+				min_value,
+				is_active
+			} = req.body as CreateOfferInputs
+
+			const vendor = await FetchVendor(user._id)
+
+			if (vendor !== null) {
+				const offer = await Offer.create({
+					title,
+					description,
+					offer_type,
+					offer_amount,
+					pincode,
+					promo_type,
+					promocode,
+					start_validity,
+					end_validity,
+					bank,
+					bins,
+					is_active,
+					min_value,
+					vendor: [vendor]
+				})
+				return res.status(201)
+			}
+		}
+		return res.status(400).json({
+			message: 'Error creating offer',
+			status: 'error'
+		})
+	} catch (e) {
+		next(e)
+	}
+}
+
+export const GetOffers = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const user = req.user as AuthPayload
+		if (user) {
+			const current_offer = [] as any
+
+			const offers = await Offer.find().populate('vendors')
+
+			if (offers) {
+				offers.map(item => {
+					if (item.vendors) {
+						item.vendors.map(vendor => {
+							if (vendor._id.toString() === user._id) {
+								current_offer.push(item)
+							}
+						})
+					}
+
+					if (item.offer_type === 'GENERIC') {
+						current_offer.push(item)
+					}
+				})
+			}
+
+			return res.status(200).json(current_offer)
+		}
+
+		return res.json({ message: 'Offers Not available' })
+	} catch (e) {
+		next(e)
+	}
+}
+
+export const EditOffer = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const user = req.user
+		const offer_id = req.params.id
+		if (user !== null) {
+			const {
+				title,
+				description,
+				offer_type,
+				offer_amount,
+				pincode,
+				promocode,
+				promo_type,
+				start_validity,
+				end_validity,
+				bank,
+				bins,
+				min_value,
+				is_active
+			} = <CreateOfferInputs>req.body
+
+			const current_offer = await Offer.findById(offer_id)
+			if (current_offer) {
+				const vendor = await FetchVendor(user?._id)
+
+				if (vendor !== null) {
+					current_offer.title = title
+					current_offer.description = description
+					current_offer.offer_type = offer_type
+					current_offer.offer_amount = offer_amount
+					current_offer.pincode = pincode
+					current_offer.promo_type = promo_type
+					current_offer.start_validity = start_validity
+					current_offer.end_validity = end_validity
+					current_offer.bank = bank as any
+					current_offer.bins = bins as any
+					current_offer.is_active = is_active
+					current_offer.min_value = min_value
+
+					const result = await current_offer.save() as OfferDocument
+
+					return res.status(200).json(result)
+				}
+			}
+		}
+	} catch (e) {
+		next(e)
+	}
 }

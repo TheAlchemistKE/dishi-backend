@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
+import path from 'path'
 import {
 	AdminRouter,
 	AuthRouter,
@@ -16,6 +17,8 @@ app.disable('x-powered-by')
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+const imagePath = path.join(__dirname, '../images')
+app.use('/images', express.static(imagePath))
 
 app.use('/auth', AuthRouter)
 app.use('/admin', AdminRouter)
@@ -34,6 +37,8 @@ mongoose
 		console.error(err)
 	})
 
-app.listen(process.env.PORT || 8000, () => {
-	console.log(`listening on port ${process.env.PORT}`)
+const PORT = process.env.PORT || 8082
+
+app.listen(PORT, () => {
+	console.log(`listening on port ${PORT}`)
 })

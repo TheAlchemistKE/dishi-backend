@@ -13,7 +13,8 @@ import {
 	Vendor,
 	VendorDocument,
 	Food,
-	Offer, OfferDocument
+	Offer,
+	OfferDocument
 } from '../../database/models'
 import { GeneratePassword, GenerateSalt } from '../../utils'
 
@@ -479,7 +480,7 @@ export const EditOffer = async (
 					current_offer.is_active = is_active
 					current_offer.min_value = min_value
 
-					const result = await current_offer.save() as OfferDocument
+					const result = (await current_offer.save()) as OfferDocument
 
 					return res.status(200).json(result)
 				}

@@ -3,7 +3,8 @@ import multer from 'multer'
 import {
 	AddFood,
 	CreateOffer,
-	CreateVendor, EditOffer,
+	CreateVendor,
+	EditOffer,
 	FetchAllVendors,
 	FetchVendorByEmail,
 	FetchVendorById,
@@ -19,6 +20,8 @@ import {
 import { Authenticate } from '../api/middlewares'
 
 const router = express.Router()
+
+const MAX_SIZE = 1048576
 const image_storage = multer.diskStorage({
 	destination: (req: Request, res: Express.Multer.File, cb) => {
 		cb(null, 'images')
@@ -31,10 +34,12 @@ const image_storage = multer.diskStorage({
 	}
 })
 
-const images: RequestHandler = multer({ storage: image_storage }).array(
-	'images',
-	10
-)
+const images: RequestHandler = multer({
+	storage: image_storage,
+	limits: {
+		fileSize: MAX_SIZE
+	}
+}).array('images', 10)
 
 router.post('/', CreateVendor)
 router.get('/', FetchAllVendors)

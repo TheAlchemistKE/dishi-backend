@@ -1,9 +1,5 @@
 import { type Request, type Response, type NextFunction } from 'express'
-import {
-	type FoodDocument,
-	Vendor,
-	Offer
-} from '../../database/models'
+import { type FoodDocument, Vendor, Offer } from '../../database/models'
 
 export const GetFoodAvailability = async (
 	req: Request,

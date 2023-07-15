@@ -400,6 +400,29 @@ export const CreateOffer = async (
 	}
 }
 
+const GetCurrentOffers = async (user: AuthPayload): Promise<any[]> => {
+	const current_offer: any[] = [];
+	const offers = await Offer.find().populate('vendors');
+
+	if (offers) {
+		offers.forEach((item) => {
+			if (item.vendors) {
+				item.vendors.forEach((vendor) => {
+					if (vendor._id.toString() === user._id) {
+						current_offer.push(item);
+					}
+				});
+			}
+
+			if (item.offer_type === 'GENERIC') {
+				current_offer.push(item);
+			}
+		});
+	}
+
+	return current_offer;
+}
+
 export const GetOffers = async (
 	req: Request,
 	res: Response,
@@ -407,33 +430,15 @@ export const GetOffers = async (
 ) => {
 	try {
 		const user = req.user as AuthPayload
-		if (user) {
-			const current_offer = [] as any
 
-			const offers = await Offer.find().populate('vendors')
-
-			if (offers) {
-				offers.map(item => {
-					if (item.vendors) {
-						item.vendors.map(vendor => {
-							if (vendor._id.toString() === user._id) {
-								current_offer.push(item)
-							}
-						})
-					}
-
-					if (item.offer_type === 'GENERIC') {
-						current_offer.push(item)
-					}
-				})
-			}
-
-			return res.status(200).json(current_offer)
+		if (!user) {
+			return res.json({ message: 'Offers Not available' })
 		}
 
-		return res.json({ message: 'Offers Not available' })
+		const current_offer = await GetCurrentOffers(user)
+		return res.status(200).json(current_offer)
 	} catch (e) {
-		next(e)
+		next(e);
 	}
 }
 
@@ -472,6 +477,7 @@ export const EditOffer = async (
 					current_offer.offer_type = offer_type
 					current_offer.offer_amount = offer_amount
 					current_offer.pincode = pincode
+					current_offer.promocode = promocode
 					current_offer.promo_type = promo_type
 					current_offer.start_validity = start_validity
 					current_offer.end_validity = end_validity

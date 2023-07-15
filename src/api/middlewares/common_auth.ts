@@ -3,22 +3,22 @@ import { type AuthPayload } from '../dto'
 import { ValidateSignature } from '../../utils'
 
 declare global {
-  namespace Express {
-    interface Request {
-      user?: AuthPayload
-    }
-  }
+	namespace Express {
+		interface Request {
+			user?: AuthPayload
+		}
+	}
 }
 
-export const Authenticate = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+export const Authenticate = (
+	req: Request,
+	res: Response,
+	next: NextFunction
 ) => {
-  const signature = await ValidateSignature(req)
-  if (signature) {
-    next()
-  } else {
-    return res.json({ message: 'User Not authorised' })
-  }
+	const signature = ValidateSignature(req)
+	if (signature) {
+		next()
+	} else {
+		return res.json({ message: 'User Not authorised' })
+	}
 }

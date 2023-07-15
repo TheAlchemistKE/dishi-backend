@@ -3,7 +3,6 @@ import { type CreateFoodDto, type CreateVendorDto } from '../dto'
 import { Vendor } from '../../database/models'
 import { GeneratePassword, GenerateSalt } from '../../utils'
 import { Food } from '../../database/models/food.model'
-import { Pagination } from '../../interfaces'
 
 export const FetchVendor = async (
   id?: string,

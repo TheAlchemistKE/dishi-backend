@@ -22,7 +22,7 @@ export class BaseRepository<T> implements IWriter<T>, IReader<T> {
   }
 
   async find (options?: PaginationOptions): Promise<T[]> {
-    const { page = 1, limit = 10 } = (options != null) || {}
+    const { page = 1, limit = 10 } = (options != null) ?? {}
     const skip = (page - 1) * limit
 
     return await this._model.find().skip(skip).limit(limit).exec()

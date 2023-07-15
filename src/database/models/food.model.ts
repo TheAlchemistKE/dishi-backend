@@ -1,5 +1,4 @@
 import mongoose, { Schema, type Document } from 'mongoose'
-import { mongoosePagination, Pagination } from 'mongoose-paginate-ts'
 
 export interface FoodDocument extends Document {
   vendor_id: string

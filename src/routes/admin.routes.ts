@@ -3,7 +3,6 @@ import express, {
   type Response,
   type NextFunction
 } from 'express'
-import { CreateVendor } from '../api/controllers'
 
 const router = express.Router()
 

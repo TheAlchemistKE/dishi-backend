@@ -18,8 +18,8 @@ export const GeneratePassword = async (
 
 export const ValidatePassword = async (
   enteredPassword: string,
-  savedPassword: string | any,
-  salt: string | any
+  savedPassword: string,
+  salt: string
 ): Promise<boolean> => {
   return (await GeneratePassword(enteredPassword, salt)) === savedPassword
 }

@@ -1,5 +1,4 @@
 import _Redis from 'ioredis'
-import Redis from 'ioredis'
 
 const {
 	REDIS_HOST,
@@ -158,7 +157,7 @@ class Singleton {
 	}
 }
 
-const instance = new Singleton()
-instance.connect()
+const instance: Singleton = new Singleton()
+void instance.connect()
 
-export const Redis = instance
+export const Redis: Singleton = instance

@@ -1,4 +1,4 @@
-import { type Request, type Response, type NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { type AuthPayload, type VendorLoginDto } from '../dto'
 import { FetchVendor } from './vendor.controller'
 import { GenerateSignature, ValidatePassword } from '../../utils'

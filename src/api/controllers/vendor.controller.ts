@@ -17,17 +17,11 @@ import {
 	OfferDocument
 } from '../../database/models'
 import { GeneratePassword, GenerateSalt } from '../../utils'
+import { FoodRepository, VendorRepository } from '../../database/repositories'
+import mongoose, { Types } from 'mongoose'
 
-export const FetchVendor = async (
-	id?: string,
-	email?: string
-): Promise<any> => {
-	if (email !== '') {
-		return Vendor.findOne({ email }).populate('foods')
-	} else {
-		return Vendor.findById(id).populate('foods')
-	}
-}
+const repo = new VendorRepository()
+const foodRepo = new FoodRepository()
 
 export const CreateVendor = async (
 	req: Request,
@@ -46,7 +40,7 @@ export const CreateVendor = async (
 			password
 		} = req.body as CreateVendorDto
 
-		const existing_vendor = await FetchVendor('', email)
+		const existing_vendor = await repo.fetchVendor(undefined, email)
 
 		if (existing_vendor !== null) {
 			return res.json({
@@ -58,7 +52,7 @@ export const CreateVendor = async (
 		const salt = await GenerateSalt()
 		const hash = await GeneratePassword(password, salt)
 
-		const created_vendor = await Vendor.create({
+		const created_vendor = await repo.create({
 			name,
 			owner_name,
 			food_type,
@@ -68,7 +62,6 @@ export const CreateVendor = async (
 			email,
 			salt,
 			service_available: false,
-			cover_images: [],
 			rating: 0,
 			password: hash,
 			foods: []
@@ -86,7 +79,7 @@ export const FetchAllVendors = async (
 	next: NextFunction
 ): Promise<any> => {
 	try {
-		const vendors = await Vendor.find().populate('foods')
+		const vendors = await repo.find()
 
 		if (vendors !== null) {
 			return res.json({ status: 'success', vendors })
@@ -98,7 +91,7 @@ export const FetchAllVendors = async (
 	}
 }
 
-export const FetchVendorById = async (
+export const fetchVendorById = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -106,7 +99,7 @@ export const FetchVendorById = async (
 	try {
 		const vendor_id = req.params.id
 
-		const vendor = await FetchVendor(vendor_id, '')
+		const vendor = await repo.fetchVendor(new Types.ObjectId(vendor_id), '')
 		if (vendor === null) {
 			res.json({ status: 'error', message: 'vendor does not exist' })
 		}
@@ -120,7 +113,7 @@ export const FetchVendorById = async (
 	}
 }
 
-export const FetchVendorByEmail = async (
+export const fetchVendorByEmail = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -128,7 +121,7 @@ export const FetchVendorByEmail = async (
 	try {
 		const { email } = req.body
 
-		const vendor = await FetchVendor('', String(email))
+		const vendor = await repo.fetchVendor(undefined, String(email))
 
 		if (vendor === null) {
 			return res.json({
@@ -154,7 +147,7 @@ export const AddFood = async (
 		const { name, description, category, food_type, ready_time, price } =
 			req.body as CreateFoodDto
 
-		const vendor = await FetchVendor(user?._id, '')
+		const vendor = await repo.fetchVendor(new Types.ObjectId(user?._id), '')
 
 		const created_food = await Food.create({
 			name,
@@ -188,7 +181,10 @@ export const UpdateVendorProfile = async (
 	const { food_type, address, phone, email } = req.body as UpdateVendorDto
 
 	if (user !== null) {
-		const existing_vendor = await FetchVendor(user._id)
+		const existing_vendor = await repo.fetchVendor(
+			new Types.ObjectId(user._id),
+			undefined
+		)
 
 		if (existing_vendor !== null) {
 			existing_vendor.food_type = food_type
@@ -213,7 +209,10 @@ export const UpdateVendorCoverImage = async (
 ) => {
 	const user = req.user as AuthPayload
 	if (user !== null) {
-		const vendor = await FetchVendor(user?._id)
+		const vendor = await repo.fetchVendor(
+			new Types.ObjectId(user?._id),
+			undefined
+		)
 
 		if (vendor !== null) {
 			const files = req?.files as [Express.Multer.File]
@@ -244,7 +243,9 @@ export const UpdateVendorAvailability = async (
 	const { lat, lng } = req.body as LocationDto
 
 	if (user !== null) {
-		const existing_vendor = await FetchVendor(user?._id)
+		const existing_vendor = await repo.fetchVendor(
+			new Types.ObjectId(user?._id)
+		)
 		if (existing_vendor !== null) {
 			existing_vendor.service_available =
 				!existing_vendor.service_available
@@ -344,155 +345,4 @@ export const ProcessOrder = async (
 	return res.status(400).json({ message: 'Error Processing Order' })
 }
 
-export const CreateOffer = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const user = req.user as AuthPayload
 
-		if (user !== null) {
-			const {
-				title,
-				description,
-				offer_type,
-				offer_amount,
-				pincode,
-				promocode,
-				promo_type,
-				start_validity,
-				end_validity,
-				bank,
-				bins,
-				min_value,
-				is_active
-			} = req.body as CreateOfferInputs
-
-			const vendor = await FetchVendor(user._id)
-
-			if (vendor !== null) {
-				const offer = await Offer.create({
-					title,
-					description,
-					offer_type,
-					offer_amount,
-					pincode,
-					promo_type,
-					promocode,
-					start_validity,
-					end_validity,
-					bank,
-					bins,
-					is_active,
-					min_value,
-					vendor: [vendor]
-				})
-				return res.status(201).json(offer)
-			}
-		}
-		return res.status(400).json({
-			message: 'Error creating offer',
-			status: 'error'
-		})
-	} catch (e) {
-		next(e)
-	}
-}
-
-const GetCurrentOffers = async (user: AuthPayload): Promise<any[]> => {
-	const current_offer: any[] = [];
-	const offers = await Offer.find().populate('vendors');
-
-	if (offers) {
-		offers.forEach((item) => {
-			if (item.vendors) {
-				item.vendors.forEach((vendor) => {
-					if (vendor._id.toString() === user._id) {
-						current_offer.push(item);
-					}
-				});
-			}
-
-			if (item.offer_type === 'GENERIC') {
-				current_offer.push(item);
-			}
-		});
-	}
-
-	return current_offer;
-}
-
-export const GetOffers = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const user = req.user as AuthPayload
-
-		if (!user) {
-			return res.json({ message: 'Offers Not available' })
-		}
-
-		const current_offer = await GetCurrentOffers(user)
-		return res.status(200).json(current_offer)
-	} catch (e) {
-		next(e);
-	}
-}
-
-export const EditOffer = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const user = req.user
-		const offer_id = req.params.id
-		if (user !== null) {
-			const {
-				title,
-				description,
-				offer_type,
-				offer_amount,
-				pincode,
-				promocode,
-				promo_type,
-				start_validity,
-				end_validity,
-				bank,
-				bins,
-				min_value,
-				is_active
-			} = <CreateOfferInputs>req.body
-
-			const current_offer = await Offer.findById(offer_id)
-			if (current_offer) {
-				const vendor = await FetchVendor(user?._id)
-
-				if (vendor !== null) {
-					current_offer.title = title
-					current_offer.description = description
-					current_offer.offer_type = offer_type
-					current_offer.offer_amount = offer_amount
-					current_offer.pincode = pincode
-					current_offer.promocode = promocode
-					current_offer.promo_type = promo_type
-					current_offer.start_validity = start_validity
-					current_offer.end_validity = end_validity
-					current_offer.bank = bank as any
-					current_offer.bins = bins as any
-					current_offer.is_active = is_active
-					current_offer.min_value = min_value
-
-					const result = (await current_offer.save()) as OfferDocument
-
-					return res.status(200).json(result)
-				}
-			}
-		}
-	} catch (e) {
-		next(e)
-	}
-}

@@ -6,5 +6,5 @@ export interface PaginationOptions {
 }
 export interface IReader<T> {
 	find: (options?: PaginationOptions) => Promise<T[]>
-	findOne: (id: Types.ObjectId) => Promise<T | null>
+	findOne: (id?: Types.ObjectId) => Promise<T | null>
 }

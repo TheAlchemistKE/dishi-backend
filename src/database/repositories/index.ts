@@ -1,3 +1,7 @@
 export * from './customer.repository'
-// export * from './deliver.repository'
+export * from './delivery.repository'
 export * from './delivery_user.repository'
+export * from './food.repository'
+export * from './offer.repository'
+export * from './order.repository'
+export * from './vendor.repository'

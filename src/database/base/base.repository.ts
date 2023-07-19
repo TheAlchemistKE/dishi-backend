@@ -12,7 +12,7 @@ export class BaseRepository<T> implements IWriter<T>, IReader<T> {
 		this._model = model
 	}
 
-	async create(item: T): Promise<T> {
+	async create(item: any): Promise<T> {
 		return this._model.create(item)
 	}
 
@@ -32,7 +32,7 @@ export class BaseRepository<T> implements IWriter<T>, IReader<T> {
 		return this._model.find().skip(skip).limit(limit).exec()
 	}
 
-	async findOne(id: Types.ObjectId): Promise<T | null> {
+	async findOne(id?: Types.ObjectId): Promise<T | null> {
 		return this._model.findById(id)
 	}
 }

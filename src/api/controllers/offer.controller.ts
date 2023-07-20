@@ -6,6 +6,7 @@ import { OfferRepository, VendorRepository } from '../../database/repositories'
 
 const offerRepo = new OfferRepository()
 const vendorRepo = new VendorRepository()
+
 export const CreateOffer = async (
 	req: Request,
 	res: Response,
@@ -136,6 +137,29 @@ export const EditOffer = async (
 					return res.status(200).json(result)
 				}
 			}
+		}
+	} catch (e) {
+		next(e)
+	}
+}
+
+export const DeleteOffer = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const offer_id = req.params.id
+		const isDeleted = await offerRepo.delete(new Types.ObjectId(offer_id))
+		if (isDeleted === true) {
+			return {
+				status: 'success',
+				message: 'Offer deleted successfully'
+			}
+		}
+		return {
+			status: 'error',
+			message: 'Offer deletion failed'
 		}
 	} catch (e) {
 		next(e)

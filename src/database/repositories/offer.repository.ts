@@ -10,7 +10,7 @@ export class OfferRepository extends BaseRepository<OfferDocument> {
 	async getCurrentOffers(user: AuthPayload): Promise<any[]> {
 		const current_offer: any[] = []
 		const offers = await Offer.find().populate('vendors')
-	
+
 		if (offers) {
 			offers.forEach(item => {
 				if (item.vendors) {
@@ -20,13 +20,13 @@ export class OfferRepository extends BaseRepository<OfferDocument> {
 						}
 					})
 				}
-	
+
 				if (item.offer_type === 'GENERIC') {
 					current_offer.push(item)
 				}
 			})
 		}
-	
+
 		return current_offer
 	}
 }

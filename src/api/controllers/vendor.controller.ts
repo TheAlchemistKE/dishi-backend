@@ -17,11 +17,10 @@ import {
 	OfferDocument
 } from '../../database/models'
 import { GeneratePassword, GenerateSalt } from '../../utils'
-import { FoodRepository, VendorRepository } from '../../database/repositories'
-import mongoose, { Types } from 'mongoose'
+import { VendorRepository } from '../../database/repositories'
+import { Types } from 'mongoose'
 
 const repo = new VendorRepository()
-const foodRepo = new FoodRepository()
 
 export const CreateVendor = async (
 	req: Request,
@@ -136,41 +135,6 @@ export const fetchVendorByEmail = async (
 	}
 }
 
-export const AddFood = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): Promise<any> => {
-	try {
-		const user = req.user
-
-		const { name, description, category, food_type, ready_time, price } =
-			req.body as CreateFoodDto
-
-		const vendor = await repo.fetchVendor(new Types.ObjectId(user?._id), '')
-
-		const created_food = await Food.create({
-			name,
-			description,
-			category,
-			food_type,
-			ready_time,
-			price,
-			vendor_id: vendor
-		})
-
-		vendor.foods.push(created_food)
-		vendor.save()
-
-		return res.json({
-			status: 'success',
-			food: created_food
-		})
-	} catch (e) {
-		next(e)
-	}
-}
-
 export const UpdateVendorProfile = async (
 	req: Request,
 	res: Response,
@@ -264,85 +228,3 @@ export const UpdateVendorAvailability = async (
 		message: 'Error updating vendor availability'
 	})
 }
-
-export const GetFoods = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	const user = req.user
-
-	if (user !== null) {
-		const foods = await Food.find({
-			vendor_id: user?._id
-		})
-		if (foods.length > 0) {
-			return res.status(200).json(foods)
-		}
-	}
-}
-
-export const GetCurrentOrders = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	const user = req.user as AuthPayload
-
-	if (user !== null) {
-		const current_orders = await Order.find({
-			vendor_id: user._id
-		}).populate('items.food')
-
-		if (current_orders !== null) {
-			res.status(200).json(current_orders)
-		}
-	}
-	return res.json({ message: 'Orders Not found' })
-}
-
-export const GetOrderDetails = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	const order_id = req.params.id
-
-	if (order_id !== null) {
-		const order = await Order.findById(order_id).populate('items.food')
-
-		if (order !== null) {
-			return res.status(200).json(order)
-		}
-	}
-	return res.json({ message: 'Order Not found' })
-}
-
-export const ProcessOrder = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	const order_id: string = req.params.id
-
-	const { status, remarks, ready_time } = req.body as ProcessOrderDto
-
-	if (order_id !== null) {
-		const order = await Order.findById(order_id).populate('foods')
-
-		if (order !== null) {
-			order.order_status = status
-			order.remarks = remarks
-
-			if (ready_time !== null) {
-				order.ready_time = ready_time
-			}
-
-			const result = await order.save()
-			return res.status(200).json(result)
-		}
-	}
-	return res.status(400).json({ message: 'Error Processing Order' })
-}
-
-

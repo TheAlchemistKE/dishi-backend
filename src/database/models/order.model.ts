@@ -3,6 +3,7 @@ import mongoose, { Schema, type Document } from 'mongoose'
 export interface OrderDocument extends Document {
 	order_id: string
 	vendor_id: string
+	customer_id: string
 	items: []
 	total_amount: number
 	paid_amount: number
@@ -17,6 +18,7 @@ const OrderSchema = new Schema(
 	{
 		order_id: { type: String, require: true },
 		vendor_id: { type: String, require: true },
+		customer_id: { type: String, require: true },
 		items: [
 			{
 				food: {

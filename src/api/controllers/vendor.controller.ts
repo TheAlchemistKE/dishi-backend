@@ -29,7 +29,7 @@ export const CreateVendor = async (
 			password
 		} = req.body as CreateVendorDto
 
-		const existing_vendor = await repo.fetchVendor(undefined, email)
+		const existing_vendor = await repo.fetchByEmail(email)
 
 		if (existing_vendor !== null) {
 			return res.json({
@@ -88,7 +88,7 @@ export const fetchVendorById = async (
 	try {
 		const vendor_id = req.params.id
 
-		const vendor = await repo.fetchVendor(new Types.ObjectId(vendor_id), '')
+		const vendor = await repo.findOne(new Types.ObjectId(vendor_id))
 		if (vendor === null) {
 			res.json({ status: 'error', message: 'vendor does not exist' })
 		}
@@ -110,7 +110,7 @@ export const fetchVendorByEmail = async (
 	try {
 		const { email } = req.body
 
-		const vendor = await repo.fetchVendor(undefined, String(email))
+		const vendor = await repo.fetchByEmail(String(email))
 
 		if (vendor === null) {
 			return res.json({
@@ -135,10 +135,7 @@ export const UpdateVendorProfile = async (
 	const { food_type, address, phone, email } = req.body as UpdateVendorDto
 
 	if (user !== null) {
-		const existing_vendor = await repo.fetchVendor(
-			new Types.ObjectId(user._id),
-			undefined
-		)
+		const existing_vendor = await repo.findOne(new Types.ObjectId(user._id))
 
 		if (existing_vendor !== null) {
 			existing_vendor.food_type = food_type
@@ -146,7 +143,7 @@ export const UpdateVendorProfile = async (
 			existing_vendor.phone = phone
 			existing_vendor.email = email
 
-			const result = (await existing_vendor.save()) as VendorDocument
+			const result = await existing_vendor.save()
 			return res.status(200).json(result)
 		}
 	}
@@ -163,10 +160,7 @@ export const UpdateVendorCoverImage = async (
 ) => {
 	const user = req.user as AuthPayload
 	if (user !== null) {
-		const vendor = await repo.fetchVendor(
-			new Types.ObjectId(user?._id),
-			undefined
-		)
+		const vendor = await repo.fetchVendor(new Types.ObjectId(user?._id))
 
 		if (vendor !== null) {
 			const files = req?.files as [Express.Multer.File]

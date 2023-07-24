@@ -3,11 +3,11 @@ import mongoose, { Schema, type Document } from 'mongoose'
 export interface VendorDocument extends Document {
 	name: string
 	owner_name: string
-	food_type: []
+	food_type?: [string]
 	pincode: string
-	address: string
-	phone: string
-	email: string
+	address?: string
+	phone?: string
+	email?: string
 	password: string
 	salt: string
 	service_available: boolean

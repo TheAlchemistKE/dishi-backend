@@ -33,8 +33,7 @@ export const CreateOffer = async (
 			} = req.body as CreateOfferInputs
 
 			const vendor = await vendorRepo.fetchVendor(
-				new Types.ObjectId(user._id),
-				undefined
+				new Types.ObjectId(user._id)
 			)
 
 			if (vendor !== null) {
@@ -113,8 +112,7 @@ export const EditOffer = async (
 			const current_offer = await Offer.findById(offer_id)
 			if (current_offer) {
 				const vendor = await vendorRepo.fetchVendor(
-					new Types.ObjectId(user?._id),
-					undefined
+					new Types.ObjectId(user?._id)
 				)
 
 				if (vendor !== null) {

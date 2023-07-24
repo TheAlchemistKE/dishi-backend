@@ -11,9 +11,11 @@ export interface VendorDocument extends Document {
 	password?: string
 	salt?: string
 	service_available: boolean
-	cover_images: []
+	cover_images: [string]
 	rating: number
 	foods: any
+	lat?: number
+	lng?: number
 }
 
 const VendorSchema = new Schema(

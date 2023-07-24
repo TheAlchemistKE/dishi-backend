@@ -63,6 +63,7 @@ To install and set up the Dishi backend system, follow these steps:
 ## Project File Structure
 The Dishi backend system follows a modular and organized structure to promote maintainability and scalability. Here's an overview of the project structure:
 ```
+├── .dockerignore
 ├── .env.example
 ├── .eslintrc.js
 ├── .github
@@ -73,6 +74,7 @@ The Dishi backend system follows a modular and organized structure to promote ma
 ├── Dockerfile
 ├── LICENSE
 ├── Makefile
+├── Procfile
 ├── README.md
 ├── babel.config.js
 ├── deploy.sh
@@ -81,16 +83,19 @@ The Dishi backend system follows a modular and organized structure to promote ma
 ├── index.ts
 ├── jest.config.js
 ├── lint.sh
+├── nginx.conf
 ├── package-lock.json
 ├── package.json
 ├── src
 │   ├── api
 │   │   ├── controllers
-│   │   │   ├── admin.controller 2.ts
 │   │   │   ├── admin.controller.ts
 │   │   │   ├── auth.controller.ts
 │   │   │   ├── customer.controller.ts
+│   │   │   ├── food.controller.ts
 │   │   │   ├── index.ts
+│   │   │   ├── offer.controller.ts
+│   │   │   ├── order.controller.ts
 │   │   │   ├── shopping.controller.ts
 │   │   │   └── vendor.controller.ts
 │   │   ├── dto
@@ -99,7 +104,9 @@ The Dishi backend system follows a modular and organized structure to promote ma
 │   │   │   ├── customer.dto.ts
 │   │   │   ├── food.dto.ts
 │   │   │   ├── index.ts
+│   │   │   ├── location.dto.ts
 │   │   │   ├── offer.dto.ts
+│   │   │   ├── order.dto.ts
 │   │   │   └── vendor.dto.ts
 │   │   └── middlewares
 │   │       ├── common_auth.ts
@@ -132,15 +139,20 @@ The Dishi backend system follows a modular and organized structure to promote ma
 │   │       ├── offer.repository.ts
 │   │       ├── order.repository.ts
 │   │       └── vendor.repository.ts
+│   ├── index.ts
 │   ├── interfaces
 │   │   ├── index.ts
 │   │   ├── request.interface.ts
 │   │   └── response.interface.ts
+│   ├── libraries
+│   │   ├── redis.library.ts
+│   │   └── stripe.library.ts
 │   ├── routes
 │   │   ├── admin.routes.ts
 │   │   ├── auth.routes.ts
 │   │   ├── customer.routes.ts
 │   │   ├── delivery.routes.ts
+│   │   ├── food.routes.ts
 │   │   ├── index.ts
 │   │   ├── shopping.routes.ts
 │   │   └── vendor.routes.ts
@@ -159,6 +171,7 @@ The Dishi backend system follows a modular and organized structure to promote ma
 │       └── vendor.test.ts
 └── tsconfig.json
 ```
+
 
 ## Development
 

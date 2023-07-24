@@ -181,7 +181,7 @@ npm test
 The test suite can be found in the `test/` directory and covers various aspects of the backend system's functionality.
 
 ## AWS Architecture Diagram
-![Dishi Backend Architecture Diagrm](<Dishi Backend Architecture Diagram (1).png>)
+![Dishi Backend Architecture Diagram](<Dishi Backend Architecture Diagram (1).png>)
 
 ## Contributing
 

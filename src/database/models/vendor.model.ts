@@ -8,8 +8,8 @@ export interface VendorDocument extends Document {
 	address?: string
 	phone?: string
 	email?: string
-	password: string
-	salt: string
+	password?: string
+	salt?: string
 	service_available: boolean
 	cover_images: []
 	rating: number

@@ -4,7 +4,7 @@ COPY . ./app
 
 WORKDIR /app
 
-EXPOSE 8082
+EXPOSE 8000
 
 RUN ls -a
 

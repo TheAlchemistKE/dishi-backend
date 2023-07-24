@@ -80,7 +80,7 @@ export const FetchAllVendors = async (
 	}
 }
 
-export const fetchVendorById = async (
+export const FetchVendorById = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -102,15 +102,15 @@ export const fetchVendorById = async (
 	}
 }
 
-export const fetchVendorByEmail = async (
+export const FetchVendorByEmail = (
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<any> => {
+) => {
 	try {
 		const { email } = req.body
 
-		const vendor = await repo.fetchByEmail(String(email))
+		const vendor = repo.fetchByEmail(String(email))
 
 		if (vendor === null) {
 			return res.json({
@@ -160,7 +160,7 @@ export const UpdateVendorCoverImage = async (
 ) => {
 	const user = req.user as AuthPayload
 	if (user !== null) {
-		const vendor = await repo.fetchVendor(new Types.ObjectId(user?._id))
+		const vendor = await repo.findOne(new Types.ObjectId(user?._id))
 
 		if (vendor !== null) {
 			const files = req?.files as [Express.Multer.File]
@@ -170,7 +170,7 @@ export const UpdateVendorCoverImage = async (
 
 			vendor.cover_images.push(...images) as string[]
 
-			const result = (await vendor.save()) as VendorDocument
+			const result = await vendor.save()
 
 			return res.status(200).json(result)
 		}
@@ -186,29 +186,33 @@ export const UpdateVendorAvailability = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const user = req.user
+	try {
+		const user = req.user
 
-	const { lat, lng } = req.body as LocationDto
+		const { lat, lng } = req.body as LocationDto
 
-	if (user !== null) {
-		const existing_vendor = await repo.fetchVendor(
-			new Types.ObjectId(user?._id)
-		)
-		if (existing_vendor !== null) {
-			existing_vendor.service_available =
-				!existing_vendor.service_available
+		if (user !== null) {
+			const existing_vendor = await repo.findOne(
+				new Types.ObjectId(user?._id)
+			)
+			if (existing_vendor !== null) {
+				existing_vendor.service_available =
+					!existing_vendor.service_available
 
-			if (lat !== 0 && lng !== 0) {
-				existing_vendor.lat = lat
-				existing_vendor.lng = lng
+				if (lat !== 0 && lng !== 0) {
+					existing_vendor.lat = lat
+					existing_vendor.lng = lng
+				}
+
+				const result = await existing_vendor.save()
+				return res.status(200).json(result)
 			}
-
-			const result = (await existing_vendor.save()) as VendorDocument
-			return res.status(200).json(result)
 		}
+		return res.status(400).json({
+			status: 'error',
+			message: 'Error updating vendor availability'
+		})
+	} catch (e) {
+		next(e)
 	}
-	return res.status(400).json({
-		status: 'error',
-		message: 'Error updating vendor availability'
-	})
 }

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import { Types } from 'mongoose'
-import { Food } from '../../database/models'
 import { CreateFoodDto } from '../dto'
 import { FoodRepository, VendorRepository } from '../../database/repositories'
 

@@ -6,7 +6,7 @@ export const GetFoodAvailability = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const pincode = req.params.pincodef
+	const pincode = req.params.pincode
 
 	const result = await Vendor.find({ pincode, service_available: true })
 		.sort([['rating', 'descending']])

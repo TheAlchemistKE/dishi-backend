@@ -1,21 +1,11 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import {
 	type UpdateVendorDto,
-	type CreateFoodDto,
 	type CreateVendorDto,
 	LocationDto,
-	ProcessOrderDto,
-	AuthPayload,
-	CreateOfferInputs
+	AuthPayload
 } from '../dto'
-import {
-	Order,
-	Vendor,
-	VendorDocument,
-	Food,
-	Offer,
-	OfferDocument
-} from '../../database/models'
+import { VendorDocument } from '../../database/models'
 import { GeneratePassword, GenerateSalt } from '../../utils'
 import { VendorRepository } from '../../database/repositories'
 import { Types } from 'mongoose'

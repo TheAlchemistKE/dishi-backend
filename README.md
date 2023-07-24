@@ -177,6 +177,9 @@ npm test
 
 The test suite can be found in the `test/` directory and covers various aspects of the backend system's functionality.
 
+## AWS Architecture Diagram
+![Dishi Backend Architecture Diagrm](<Dishi Backend Architecture Diagram (1).png>)
+
 ## Contributing
 
 Contributions to the Dishi backend system are welcome! If you encounter any issues, feel free to open an issue in the project repository. For contributions, please follow the guidelines mentioned in the CONTRIBUTING.md file.

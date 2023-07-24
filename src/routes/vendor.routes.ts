@@ -43,8 +43,8 @@ const images: RequestHandler = multer({
 
 router.post('/', CreateVendor)
 router.get('/', FetchAllVendors)
-router.get('/:id', FetchVendorById)
-router.get('/email', FetchVendorByEmail)
+// router.get('/:id', FetchVendorById)
+// router.get('/email', FetchVendorByEmail)
 router.use(Authenticate)
 router.post('/foods', AddFood)
 router.post('/cover-image', images, UpdateVendorCoverImage)

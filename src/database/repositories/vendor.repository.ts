@@ -7,24 +7,18 @@ export class VendorRepository extends BaseRepository<VendorDocument> {
 		super(Vendor)
 	}
 
-	async fetchByEmail(email?: string): Promise<VendorDocument | object> {
+	fetchByEmail(email: string): VendorDocument {
 		try {
-			if (email !== undefined) {
-				const result = await Vendor.findOne({ email: email })
-				if (result !== null) {
-					return result
-				}
-			}
-			return {
-				message: `Vendor was not found`,
-				status: 'error'
-			}
+			const result = Vendor.findOne({
+				email: email
+			}) as unknown as VendorDocument
+			return result
 		} catch (error) {
 			throw new Error(String(error))
 		}
 	}
 
-	async fetchVendor(id?: Types.ObjectId, email?: string): Promise<any> {
+	async fetchVendor(id: Types.ObjectId, email: string): Promise<any> {
 		if (email !== '') {
 			return this.fetchByEmail(email)
 		} else {

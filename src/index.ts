@@ -20,12 +20,18 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const imagePath = path.join(__dirname, '../images')
 app.use('/images', express.static(imagePath))
 
-app.use('/auth', AuthRouter)
-app.use('/admin', AdminRouter)
-app.use('/customers', CustomerRouter)
-app.use('/vendors', VendorRouter)
-app.use('/deliveries', DeliveryRouter)
-app.use('/shopping', ShoppingRoute)
+const routers = [
+	{ url: '/auth', router: AuthRouter },
+	{ url: '/admin', router: AdminRouter },
+	{ url: '/customers', router: CustomerRouter },
+	{ url: '/vendors', router: VendorRouter },
+	{ url: '/deliveries', router: DeliveryRouter },
+	{ url: '/shopping', router: ShoppingRoute }
+]
+
+routers.forEach(({ url, router }) => {
+	app.use(url, router)
+})
 
 mongoose
 	.connect(MONGO_URI)

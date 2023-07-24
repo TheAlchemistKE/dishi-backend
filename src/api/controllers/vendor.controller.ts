@@ -5,7 +5,6 @@ import {
 	LocationDto,
 	AuthPayload
 } from '../dto'
-import { VendorDocument } from '../../database/models'
 import { GeneratePassword, GenerateSalt } from '../../utils'
 import { VendorRepository } from '../../database/repositories'
 import { Types } from 'mongoose'
@@ -29,7 +28,7 @@ export const CreateVendor = async (
 			password
 		} = req.body as CreateVendorDto
 
-		const existing_vendor = await repo.fetchByEmail(email)
+		const existing_vendor = repo.fetchByEmail(email)
 
 		if (existing_vendor !== null) {
 			return res.json({
@@ -130,27 +129,33 @@ export const UpdateVendorProfile = async (
 	res: Response,
 	next: NextFunction
 ): Promise<any> => {
-	const user = req.user as AuthPayload
+	try {
+		const user = req.user as AuthPayload
 
-	const { food_type, address, phone, email } = req.body as UpdateVendorDto
+		const { food_type, address, phone, email } = req.body as UpdateVendorDto
 
-	if (user !== null) {
-		const existing_vendor = await repo.findOne(new Types.ObjectId(user._id))
+		if (user !== null) {
+			const existing_vendor = await repo.findOne(
+				new Types.ObjectId(user._id)
+			)
 
-		if (existing_vendor !== null) {
-			existing_vendor.food_type = food_type
-			existing_vendor.address = address
-			existing_vendor.phone = phone
-			existing_vendor.email = email
+			if (existing_vendor !== null) {
+				existing_vendor.food_type = food_type
+				existing_vendor.address = address
+				existing_vendor.phone = phone
+				existing_vendor.email = email
 
-			const result = await existing_vendor.save()
-			return res.status(200).json(result)
+				const result = await existing_vendor.save()
+				return res.status(200).json(result)
+			}
 		}
+		return res.status(400).json({
+			status: 'error',
+			message: 'Error updating vendor profile'
+		})
+	} catch (e) {
+		next(e)
 	}
-	return res.status(400).json({
-		status: 'error',
-		message: 'Error updating vendor profile'
-	})
 }
 
 export const UpdateVendorCoverImage = async (
@@ -158,27 +163,31 @@ export const UpdateVendorCoverImage = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const user = req.user as AuthPayload
-	if (user !== null) {
-		const vendor = await repo.findOne(new Types.ObjectId(user?._id))
+	try {
+		const user = req.user as AuthPayload
+		if (user !== null) {
+			const vendor = await repo.findOne(new Types.ObjectId(user?._id))
 
-		if (vendor !== null) {
-			const files = req?.files as [Express.Multer.File]
-			const images = files.map(
-				(file: Express.Multer.File) => file.filename
-			)
+			if (vendor !== null) {
+				const files = req?.files as [Express.Multer.File]
+				const images = files.map(
+					(file: Express.Multer.File) => file.filename
+				)
 
-			vendor.cover_images.push(...images) as string[]
+				vendor.cover_images.push(...images)
 
-			const result = await vendor.save()
+				const result = await vendor.save()
 
-			return res.status(200).json(result)
+				return res.status(200).json(result)
+			}
 		}
+		return res.status(400).json({
+			status: 'error',
+			message: 'Error updating cover images'
+		})
+	} catch (e) {
+		next(e)
 	}
-	return res.status(400).json({
-		status: 'error',
-		message: 'Error updating cover images'
-	})
 }
 
 export const UpdateVendorAvailability = async (

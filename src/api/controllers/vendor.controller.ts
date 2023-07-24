@@ -107,7 +107,7 @@ export const FetchVendorByEmail = (
 	next: NextFunction
 ) => {
 	try {
-		const { email } = req.body
+		const { email } = req.params
 
 		const vendor = repo.fetchByEmail(String(email))
 
